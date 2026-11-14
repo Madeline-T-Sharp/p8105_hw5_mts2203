@@ -1,0 +1,37 @@
+---
+title: "p8105_hw5_mts2203"
+author: "Madeline Sharp"
+date: "2026-11-14"
+output: github_document
+---
+
+# Problem 0
+
+## Setting up 
+
+```{r setup, include=FALSE}
+# setting up tidyverse library
+library(tidyverse)
+
+# setting chunk options
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+# setting minimal theme and legend position
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+# setting continuous scales to viridis
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+# setting discrete color scale to viridis
+scale_colour_discrete = scale_colour_viridis_d
+
+# setting discrete fill scale to viridis
+scale_fill_discrete = scale_fill_viridis_d
+```

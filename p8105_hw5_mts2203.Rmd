@@ -35,3 +35,23 @@ scale_colour_discrete = scale_colour_viridis_d
 # setting discrete fill scale to viridis
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+
+# Problem 1
+
+## Writing Birthday Function
+
+```{r writing_function, message = F}
+# writing birthday function 
+duplicate_birthdays = function(n) {
+  
+  # drawing “birthdays” for each person randomly
+  birthdays = sample(1:365, n, replace = TRUE)
+
+  # checking for duplicate birthdays
+  duplicate_birthdays = length(unique(birthdays)) < n
+  
+  # returning duplicate birthdays
+  return(duplicate_birthdays)
+}
+```

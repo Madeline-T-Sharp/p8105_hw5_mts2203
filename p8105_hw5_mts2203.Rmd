@@ -9,7 +9,7 @@ output: github_document
 
 ## Setting up 
 
-```{r setup, include=FALSE}
+```{r setting_up, include = FALSE}
 # setting up tidyverse library
 library(tidyverse)
 
@@ -56,9 +56,9 @@ duplicate_birthdays = function(n) {
 }
 ```
 
-## Running simulations
+## Running Simulations
 
-```{r simulating_function}
+```{r simulating_function, message = F}
 # simulating function and computing prob. that <= 2 people will share a birthday
 birthday_probabilities_df =
   expand_grid(
@@ -73,4 +73,19 @@ birthday_probabilities_df =
     probability = mean(duplicates)
   ) |>
   print()
+```
+
+## Plotting Probabilities
+
+```{r plotting_probabilies, message = F}
+# making a plot showing the probability as a function of group size
+birthday_probabilities_df |> 
+  ggplot(aes(x = number_of_people, y = probability)) + 
+  geom_point() + 
+  geom_line() +
+  labs(
+    title = "Probability of Duplicate Birthdays",
+    x = "Number of People",
+    y = "Probability of Duplicate Birthday"
+  )
 ```

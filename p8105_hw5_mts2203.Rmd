@@ -93,3 +93,30 @@ birthday_probabilities_df |>
 ## Commenting on the Results
 
 The `birthday_probabilities_df` plot shows that as group size increases so does the probability of duplicate birthdays, assuming each person is randomly assigned a birthday. Looking at the *Probability of Duplicate Birthdays* plot, this increase is initially gradual, but becomes much steeper as group size grows. As the group size approaches 50, the probability of at least one duplicate birthday approaches 1.00. At group size 23, this probability is already approximately 0.50.
+
+
+# Problem 2
+
+## Creating the Data Frame
+
+```{r creating_dataframe, message = F}
+# creating the data frame containing all file names
+participants_df =
+  participant_files =
+  tibble(
+    files = list.files("data/"),
+    path = str_c("data/", files)
+  ) |>
+  print()
+```
+
+## Adding Participant Data to the Dataframe
+
+```{r filling_dataframe, message = F}
+# iterating over file names and read in data for each subject 
+participants_df |>   
+  mutate(
+    data = map(path,read_csv)
+  ) |>
+  unnest(data)
+```

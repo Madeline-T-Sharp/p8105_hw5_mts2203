@@ -114,9 +114,37 @@ participants_df =
 
 ```{r filling_dataframe, message = F}
 # iterating over file names and read in data for each subject 
-participants_df |>   
+participants_df = 
+  participants_df |>   
   mutate(
-    data = map(path,read_csv)
+     data = map(path,read_csv)
   ) |>
-  unnest(data)
+  unnest(data) |>
+  print()
+```
+
+## Tidying the result
+
+```{r tidying_dataframe, message = F}
+# manipulating file names to include control arm and subject ID; general tidying
+participants_df =
+  participants_df |>
+  mutate(
+    subject_id = str_replace(files, "\\.csv$", ""),
+    arm = case_when(
+      str_starts(subject_id, "con") ~ "Control",
+      str_starts(subject_id, "cov") ~ "Control",
+      str_starts(subject_id, "exp") ~ "Experimental"
+    )
+  ) |>
+  pivot_longer(
+    cols = starts_with("week_"),
+    names_to = "week",
+    values_to = "observation"
+  ) |>
+  mutate(
+    week = as.numeric(str_remove(week, "week_"))
+  ) |>
+  select(subject_id, arm, week, observation) |>
+  print()
 ```

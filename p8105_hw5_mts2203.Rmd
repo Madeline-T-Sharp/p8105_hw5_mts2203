@@ -168,3 +168,29 @@ participants_df |>
 ## Commenting on the Differences Between Groups
 
 The `participants_df` spaghetti plot shows differences in observations over time between the control and experimental groups. The experimental group shows an overall increase in observations over time, whereas the control group remains fairly consistent, showing no clear upward or downward trend. Variations exists among participants in both the experimental and control groups. Overall, this suggests that the experimental group is improving over time compared to the control group.
+
+
+# Problem 3
+
+## Setting the Design Elements and Running Simulations
+
+```{r setting_design_running_sims, message = F}
+# setting the design elements
+n = 30
+sigma = 5
+n_sims = 5000
+alpha = 0.05
+
+# generating datasets when the true mean is zero.
+simulation_df =
+  tibble(
+    iter = 1:n_sims
+  ) |>
+  mutate(
+    data = map(iter, \(x) rnorm(n, mean = 0, sd = sigma)),
+    results = map(data, \(x) broom::tidy(t.test(x, mu = 0)))
+  ) |>
+  unnest(results) |>
+  select(iter, estimate, p.value) |>
+  print()
+```

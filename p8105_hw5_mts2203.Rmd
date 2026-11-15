@@ -123,7 +123,7 @@ participants_df =
   print()
 ```
 
-## Tidying the result
+## Tidying the Result
 
 ```{r tidying_dataframe, message = F}
 # manipulating file names to include control arm and subject ID; general tidying
@@ -148,3 +148,23 @@ participants_df =
   select(subject_id, arm, week, observation) |>
   print()
 ```
+
+## Making a Spaghetti Plot
+
+```{r making_spaghetti_plot, message = F}
+# making a spaghetti plot showing observations on each subject over time
+participants_df |>
+  ggplot(aes(x = week, y = observation, group = subject_id, color = arm)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Participant Observations Over Time",
+    x = "Week",
+    y = "Observation",
+    color = "Study Arm"
+  )
+```
+
+## Commenting on the Differences Between Groups
+
+The `participants_df` spaghetti plot shows differences in observations over time between the control and experimental groups. The experimental group shows an overall increase in observations over time, whereas the control group remains fairly consistent, showing no clear upward or downward trend. Variations exists among participants in both the experimental and control groups. Overall, this suggests that the experimental group is improving over time compared to the control group.

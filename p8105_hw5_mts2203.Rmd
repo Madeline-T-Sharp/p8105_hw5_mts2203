@@ -5,10 +5,6 @@ date: "2026-11-14"
 output: github_document
 ---
 
-# Problem 0
-
-## Setting up 
-
 ```{r setting_up, include = FALSE}
 # setting up tidyverse library
 library(tidyverse)
@@ -172,25 +168,56 @@ The `participants_df` spaghetti plot shows differences in observations over time
 
 # Problem 3
 
-## Setting the Design Elements and Running Simulations
+## Setting Design Elements and Creating t-test Function
 
-```{r setting_design_running_sims, message = F}
-# setting the design elements
-n = 30
-sigma = 5
-n_sims = 5000
-alpha = 0.05
+```{r setting_design_function, message = F}
+# setting the design elements and generating a one-sample t-test function
+sim_t_test = function(n_obs = 30, mu = 0, sigma = 5) {
 
-# generating datasets when the true mean is zero.
-simulation_df =
+  sim_df =
+    tibble(
+      x = rnorm(n = n_obs, mean = mu, sd = sigma)
+    )
+
+  return_df =
+    sim_df |>
+    summarize(
+      estimate = mean(x),
+      p.value = broom::tidy(t.test(x, mu = 0))$p.value
+    )
+
+  return(return_df)
+
+}
+```
+
+## Running Simulations
+
+```{r running_simulation, message = F}
+# generating 5000 datasets from the rnorm model
+sim_results1_df =
   tibble(
-    iter = 1:n_sims
-  ) |>
+    samp_size = rep(30, 5000)
+  ) |> 
   mutate(
-    data = map(iter, \(x) rnorm(n, mean = 0, sd = sigma)),
-    results = map(data, \(x) broom::tidy(t.test(x, mu = 0)))
-  ) |>
-  unnest(results) |>
-  select(iter, estimate, p.value) |>
+    est_df = map(samp_size, sim_t_test)
+  ) |> 
+  unnest(est_df) |>
+  print()
+```
+
+## Repeating Simulations for Mu Set
+
+```{r repeating_sims, message = F}
+# repeating simulation for population means from 0 to 6
+sim_results2_df =
+  expand_grid(
+    mu = 0:6,
+    iter = 1:5000
+  ) |> 
+  mutate(
+    est_df = map(mu, ~sim_t_test(mu = .))
+  ) |> 
+  unnest(est_df) |> 
   print()
 ```

@@ -35,7 +35,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 # Problem 1
 
-## Writing Birthday Function
+## Writing the Birthday Function
 
 ```{r writing_function, message = F}
 # writing birthday function 
@@ -52,7 +52,7 @@ duplicate_birthdays = function(n) {
 }
 ```
 
-## Running Simulations
+## Running Birthday Probability Simulations
 
 ```{r simulating_function, message = F}
 # simulating function and computing prob. that <= 2 people will share a birthday
@@ -71,7 +71,7 @@ birthday_probabilities_df =
   print()
 ```
 
-## Plotting Probabilities
+## Plotting Birthday Probabilities
 
 ```{r plotting_probabilies, message = F}
 # making a plot showing the probability as a function of group size
@@ -98,7 +98,6 @@ The `birthday_probabilities_df` plot shows that as group size increases so does 
 ```{r creating_dataframe, message = F}
 # creating the data frame containing all file names
 participants_df =
-  participant_files =
   tibble(
     files = list.files("data/"),
     path = str_c("data/", files)
@@ -168,7 +167,7 @@ The `participants_df` spaghetti plot shows differences in observations over time
 
 # Problem 3
 
-## Setting Design Elements and Creating t-test Function
+## Setting Design Elements and Creating the t-test Function
 
 ```{r setting_design_function, message = F}
 # setting the design elements and generating a one-sample t-test function
@@ -191,7 +190,7 @@ sim_t_test = function(n_obs = 30, mu = 0, sigma = 5) {
 }
 ```
 
-## Running Simulations
+## Running 5000 Simulations
 
 ```{r running_simulation, message = F}
 # generating 5000 datasets from the rnorm model
@@ -221,3 +220,27 @@ sim_results2_df =
   unnest(est_df) |> 
   print()
 ```
+
+## Making a Plot to Visualize Effect Size and Power
+
+```{r plotting_statistics, message = F}
+# plotting the proportion null was rejected against the true mu value
+sim_results2_df |> 
+  group_by(mu) |> 
+  summarize(
+    power = mean(p.value < 0.05)
+  ) |> 
+  ggplot(aes(x = mu, y = power)) +
+  geom_point() +
+  geom_line() +
+  labs(
+    title = "Statistical Power vs. True Population Mean",
+    x = "True Population Mean",
+    y = "Power"
+  ) +
+  theme_minimal()
+```
+
+## Commenting on the Association Between Effect Size and Power
+
+According to the plot shown above, there is a positive association between effect size and statistical power. Power increases gradually from approximately 0.05 when the true population mean is 0 to approximately 1.00 when the true population mean is 5. After this point, power stabilizes around 1.00. This indicates that as the effect size increases, the probability of rejecting the null hypothesis also increases, meaning the test becomes more likely to detect a true effect.

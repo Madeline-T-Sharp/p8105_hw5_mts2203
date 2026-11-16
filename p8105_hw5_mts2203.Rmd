@@ -237,10 +237,53 @@ sim_results2_df |>
     title = "Statistical Power vs. True Population Mean",
     x = "True Population Mean",
     y = "Power"
-  ) +
-  theme_minimal()
+  )
 ```
 
 ## Commenting on the Association Between Effect Size and Power
 
 According to the plot shown above, there is a positive association between effect size and statistical power. Power increases gradually from approximately 0.05 when the true population mean is 0 to approximately 1.00 when the true population mean is 5. After this point, power stabilizes around 1.00. This indicates that as the effect size increases, the probability of rejecting the null hypothesis also increases, meaning the test becomes more likely to detect a true effect.
+
+## Overlaying Statistical Plots to Compare Average Estimated and True Mus
+
+```{r overlaying_statistics, message = F}
+# plotting average estimates across all samples against significant samples
+sim_results2_df |> 
+  group_by(mu) |> 
+  summarize(
+    avg_estimate = mean(estimate),
+    avg_reject_estimate = mean(estimate[p.value < 0.05])
+  ) |> 
+  pivot_longer(
+    cols = c(avg_estimate, avg_reject_estimate),
+    names_to = "estimate_type",
+    values_to = "mean_estimate"
+  ) |> 
+  ggplot(aes(x = mu, y = mean_estimate, color = estimate_type)) +
+  geom_point() +
+  geom_line() +
+  geom_abline(
+    intercept = 0,
+    slope = 1,
+    linetype = "dashed",
+    color = "black"
+  ) +
+  labs(
+    title = "Average Estimates vs. True Population Mean",
+    x = "True Population Mean",
+    y = "Average Estimated Mean",
+    color = "Estimate Type"
+  ) +
+  scale_color_discrete(
+    labels = c(
+      "Average Estimate (All Samples)",
+      "Average Estimate (Rejected Null Only)"
+    )
+  )
+```
+
+## Commenting on the Relationship Between Estimated and True Population Means
+
+No, the average estimated mean among samples where the null hypothesis was rejected is not necessarily equal to the true population mean. This is because we are only selecting statistically significant samples (p-values below 0.05). These samples tend to have estimated means further away from zero, which can lead to an overestimation of the true population mean. This is an example of selection bias.
+
+In contrast, the average estimated mean across all simulations should be approximately equal to the true population mean because the sample mean is an unbiased estimator. As the true population mean increases, statistical power also increases, meaning more samples are significant. Therefore, the average estimate among significant samples becomes closer to the true population mean.
